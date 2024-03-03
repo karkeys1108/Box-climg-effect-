@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        main {
+            padding: 1rem;
+        }
+
+        #notes-container {
+            margin-bottom: 1rem;
+        }
+
+        #add-note textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 0.5rem;
+        }
+
+        #add-note button {
+            display: block;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Notes Website</h1>
+    </header>
+    <main>
+        <section id="notes-container">
+            <!-- Notes will be dynamically added here -->
+        </section>
+        <section id="add-note">
+            <textarea id="note-content" placeholder="Write your note here..."></textarea>
+            <button onclick="addNote()">Add Note</button>
+        </section>
+        <section id="search-reminder">
+            <input type="text" id="search-input" placeholder="Search notes...">
+            <button onclick="searchNotes()">Search</button>
+            <input type="datetime-local" id="reminder-input">
+            <button onclick="setReminder()">Set Reminder</button>
+        </section>
+    </main>
+    <script>
+        function addNote() {
+            const noteContent = document.getElementById('note-content').value.trim();
+            if (noteContent !== '') {
+                const noteElement = document.createElement('div');
+                noteElement.classList.add('note');
+                noteElement.innerHTML = `
+                    <p>${noteContent}</p>
+                    <button onclick="editNote(this)">Edit</button>
+                    <button onclick="deleteNote(this)">Delete</button>
+                `;
+                document.getElementById('notes-container').appendChild(noteElement);
+                document.getElementById('note-content').value = '';
+            } else {
+                alert('Please enter a note before adding.');
+            }
+        }
+
+        function editNote(button) {
+            const noteElement = button.parentNode;
+            const noteContent = noteElement.querySelector('p').textContent;
+            const updatedContent = prompt('Edit your note:', noteContent);
+            if (updatedContent !== null) {
+                noteElement.querySelector('p').textContent = updatedContent;
+            }
+        }
+
+        function deleteNote(button) {
+            const noteElement = button.parentNode;
+            noteElement.remove();
+        }
+
+        function searchNotes() {
+            const searchTerm = document.getElementById('search-input').value.trim().toLowerCase();
+            const notes = document.querySelectorAll('.note');
+            notes.forEach(note => {
+                const noteText = note.querySelector('p').textContent.toLowerCase();
+                if (noteText.includes(searchTerm)) {
+                    note.style.display = 'block';
+                } else {
+                    note.style.display = 'none';
+                }
+            });
+        }
+
+        function setReminder() {
+            const reminderTime = document.getElementById('reminder-input').value;
+            if (reminderTime !== '') {
+                alert('Reminder set for: ' + reminderTime);
+            } else {
+                alert('Please select a reminder time.');
+            }
+        }
+    </script>
+</body>
+</html>
